@@ -10,13 +10,17 @@ class Applciation(Flask):
                                           template_folder=template_folder,
                                           root_path=root_path,
                                           static_folder=None)
+        self.config.from_pyfile('config/base_setting.py')
+        # print(os.environ['OPS_CONFIG'])
+
         db.init_app(self)
+
 
 db = SQLAlchemy()
 app = Applciation(__name__,
                   template_folder=os.getcwd() + '/web/templates/',
                   root_path=os.getcwd())
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@127.0.0.1/hmsc?charset=utf8'
+
 manager = Manager(app)
 
 

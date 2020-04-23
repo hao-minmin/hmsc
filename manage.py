@@ -5,7 +5,7 @@ import urls
 from flask_script import Server
 
 #配置runserve指令   添加指令add_command   主机 端口  开发模式  热更新
-manager.add_command('runserver',Server(host="localhost",port="5000",use_debugger=True,use_reloader=True))
+manager.add_command('runserver',Server(host="localhost",port=app.config["SERVER_PORT"],use_debugger=True,use_reloader=True))
 
 
 # run起来
