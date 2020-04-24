@@ -1,6 +1,10 @@
-from flask import Blueprint,render_template,request,jsonify,make_response
-from common.models.user import User
+from flask import Blueprint,request,jsonify,make_response,redirect,g
+
+from application import app
+from common.models.User import User
 from common.libs.user.UserService import UserService
+from common.libs.UrlManager import UrlManager
+from common.libs.Helper import ops_render
 
 import json
 
@@ -9,8 +13,11 @@ router_user = Blueprint('user_page',__name__)
 @router_user.route("/login",methods=['GET','POST'])
 def login():
     if request.method == 'GET':
-        return render_template("user/login.html")
-    
+        if g.current_user:
+            return redirect(UrlManager.buildUrl("/"))
+        return ops_render("user/login.html")
+        
+    # POST请求
     resp = {
         'code':200,
         'msg':'登录成功',
@@ -28,32 +35,31 @@ def login():
         resp['code'] = -1
         resp['msg'] = "请输入正确的密码"
         return jsonify(resp)
-    print(111)
+    # 从数据库中取出user
     user_info = User.query.filter_by(login_name=login_name).first()
-    print(user_info)
-    
-    
     if not user_info:
-        
-        resp['code']=-1
-        resp['msg']="用户不存在"
+        resp['code'] = -1
+        resp['msg'] = "用户不存在"
         return jsonify(resp)
-        # 判断密码
+    # 判断密码
     if user_info.login_pwd != UserService.generatePwd(login_pwd,user_info.login_salt):
-        resp['code']=-1
-        resp['msg']="密码输入错误"
+        resp['code'] = -1
+        resp['msg'] = "密码输入错误"
         return jsonify(resp)
-    if user_info.status !=1:
-        resp['code']=-1
-        resp['msg']='用户已经被禁用'
-        return jsonify(resp)
-    response=make_response(json.dumps({'code':200,"msg":"***登录成功***"}))
-    # 前端的cookie可以用 cookie是 15天  信息是uid 
-    response.set_cookie("hmsc_1901C","%s@%s"%(UserService.generateAuthCode(user_info),user_info.uid),60*60*24*15)
-
     
+    # 判断用户状态
+    if user_info.status != 1:
+        resp['code'] = -1
+        resp['msg'] = "用户已经被禁用，请联系管理员处理"
+        return jsonify(resp)
+    
+    
+    response = make_response(json.dumps({'code':200,'msg':'登录成功~~~'}))
+    # Cookie中存入的信息是user_info.uid,user_info
+    response.set_cookie(app.config['AUTH_COOKIE_NAME'],"%s@%s"%(UserService.generateAuthCode(user_info),user_info.uid),60*60*24*15)
     return response
     
+
 @router_user.route("/logout")
 def logout():
     return "登出"
