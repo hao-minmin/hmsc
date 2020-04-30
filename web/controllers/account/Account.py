@@ -126,7 +126,7 @@ def set():
         resp['code'] = -1
         resp['msg'] = "该用户为Bruce，不允许修改"
         return jsonify(resp)
-    model_user.login_pwd = UserService.generatePwd(login_pwd,model_user.login_salt)
+    model_user.login_pwd = UserService.generatePwd(model_user.login_salt)
     model_user.updated_time = getCurrentDate()
     
     db.session.add(model_user)
