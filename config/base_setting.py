@@ -9,6 +9,7 @@ AUTH_COOKIE_NAME = "hmsc_1901C"
 IGNORE_URLS = [
     "^/user/login"
 ]
+
 IGNORE_CHECK_LOGIN_URLS = [
     "^/static",
     "^/favicon.ico"
@@ -17,7 +18,7 @@ IGNORE_CHECK_LOGIN_URLS = [
 PAGE_SIZE = 2
 
 UPLOAD = {
-    'ext':['jpg','gif','bmp','jpeg','png'],
-    'prefix_path':'\\web\\static\\upload',
-    'prefix_url':'\\static\\upload'    
+    'ext': [".png", ".jpeg", ".jpg", ".gif", ".bmp"],
+    'prefix_path': '\\web\\static\\upload',
+    'prefix_url': '\\static\\upload'
 }

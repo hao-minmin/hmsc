@@ -52,7 +52,7 @@ var goods_set_ops = {
                 alert("请输入符合规范的售价")
                 return
             }
-            if ($(".wrap_goods_set .pic-each").length < 1) {
+            if ($(".wrap_goods_set input[name=pic]").length < 1) {
                 alert("请上传封面")
                 return
             }
@@ -76,7 +76,7 @@ var goods_set_ops = {
                 cat_id: cat_id_target_value,
                 name: name_target_value,
                 price: price_target_value,
-                main_image: $(".wrap_goods_set .pic-each .del_image").attr("data"),
+                main_image: $(".wrap_goods_set input[name=pic] ").val(),
                 summary: summary,
                 stock: stock_target_value,
                 tags: tags_target_value,
